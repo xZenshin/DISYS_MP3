@@ -25,4 +25,5 @@ message Outcome {
     int32 id = 1;
     int32 highestBid = 2;
     bool isOver = 3;
+    int32 winner = 4;
 }
