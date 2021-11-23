@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+option go_package = "github.com/xZenshin/DISYS_MP3";
+
+
+
+service AuctionHouse {
+    rpc Bid (Request) returns (Response);
+    rpc Result (google.Protobuf.Empty) returns (Outcome);
+}
+
+
+message Request {
+    int32 amount = 1;
+}
+
+message Response {
+    string acknowledgement = 1;
+}
+
+message Outcome {
+    int32 highestBid = 1;
+    bool isOver = 2;
+}
