@@ -12,14 +12,17 @@ service AuctionHouse {
 
 
 message Request {
-    int32 amount = 1;
+    int32 id = 1;
+    int32 amount = 2;
 }
 
 message Response {
-    string acknowledgement = 1;
+    int32 id = 1;
+    string acknowledgement = 2;
 }
 
 message Outcome {
-    int32 highestBid = 1;
-    bool isOver = 2;
+    int32 id = 1;
+    int32 highestBid = 2;
+    bool isOver = 3;
 }
