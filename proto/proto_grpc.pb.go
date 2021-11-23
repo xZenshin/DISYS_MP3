@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 type AuctionHouseClient interface {
 	Bid(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
 	Result(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Outcome, error)
+	RegisterClient(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Response, error)
 }
 
 type auctionHouseClient struct {
@@ -49,12 +50,22 @@ func (c *auctionHouseClient) Result(ctx context.Context, in *emptypb.Empty, opts
 	return out, nil
 }
 
+func (c *auctionHouseClient) RegisterClient(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/AuctionHouse/RegisterClient", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuctionHouseServer is the server API for AuctionHouse service.
 // All implementations must embed UnimplementedAuctionHouseServer
 // for forward compatibility
 type AuctionHouseServer interface {
 	Bid(context.Context, *Request) (*Response, error)
 	Result(context.Context, *emptypb.Empty) (*Outcome, error)
+	RegisterClient(context.Context, *emptypb.Empty) (*Response, error)
 	mustEmbedUnimplementedAuctionHouseServer()
 }
 
@@ -67,6 +78,9 @@ func (UnimplementedAuctionHouseServer) Bid(context.Context, *Request) (*Response
 }
 func (UnimplementedAuctionHouseServer) Result(context.Context, *emptypb.Empty) (*Outcome, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Result not implemented")
+}
+func (UnimplementedAuctionHouseServer) RegisterClient(context.Context, *emptypb.Empty) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterClient not implemented")
 }
 func (UnimplementedAuctionHouseServer) mustEmbedUnimplementedAuctionHouseServer() {}
 
@@ -117,6 +131,24 @@ func _AuctionHouse_Result_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuctionHouse_RegisterClient_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuctionHouseServer).RegisterClient(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AuctionHouse/RegisterClient",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuctionHouseServer).RegisterClient(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuctionHouse_ServiceDesc is the grpc.ServiceDesc for AuctionHouse service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -131,6 +163,10 @@ var AuctionHouse_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Result",
 			Handler:    _AuctionHouse_Result_Handler,
+		},
+		{
+			MethodName: "RegisterClient",
+			Handler:    _AuctionHouse_RegisterClient_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
