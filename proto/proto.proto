@@ -8,6 +8,7 @@ option go_package = "github.com/xZenshin/DISYS_MP3";
 service AuctionHouse {
     rpc Bid (Request) returns (Response);
     rpc Result (google.protobuf.Empty) returns (Outcome);
+    rpc RegisterClient(google.protobuf.empty) returns (Response);
 }
 
 
