@@ -7,7 +7,4 @@ protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=p
 
 TODO:
 
-- isOver value not getting updated to reflect current state
-- Cannot crash a server(replication managers should run as their own "server")
-- Inform clients when auction is started/over
 - Clean up log/print formats

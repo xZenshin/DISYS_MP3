@@ -1,0 +1,23 @@
+2021/11/28 17:18:53 Response from port 5000: Registered
+2021/11/28 17:18:53 Your ID is: 0
+2021/11/28 17:18:53 Response from port 5001: Registered
+2021/11/28 17:18:53 Your ID is: 0
+2021/11/28 17:18:53 Response from port 5002: Registered
+2021/11/28 17:18:53 Your ID is: 0
+2021/11/28 17:18:58 Response from port 5000: Registered
+2021/11/28 17:18:58 Your ID is: 1
+2021/11/28 17:18:58 Response from port 5001: Registered
+2021/11/28 17:18:58 Your ID is: 1
+2021/11/28 17:18:58 Response from port 5002: Registered
+2021/11/28 17:18:58 Your ID is: 1
+2021/11/28 17:19:02 Response from server: No auction was running, you have started one with a bid of 20
+2021/11/28 17:19:10 Response from server: Your bid was lower than the current bid, please check the outcome
+2021/11/28 17:19:16 The Auction is still going, highest current bid = 20 💰
+2021/11/28 17:19:20 Response from server: Your bid was registered
+2021/11/28 17:19:37 Auction is over - Winner is YOU with the bid of 50 💰
+2021/11/28 17:19:40 Auction is over - Winner is client 1 with the bid of 50 💰
+2021/11/28 17:19:45 Response from server: No auction was running, you have started one with a bid of 1000
+2021/11/28 17:20:02 (THE CLIENT WOULD NOT SEE THIS) ------ Error when calling Bid: A server crashed!
+2021/11/28 17:20:02 Response from server: Your bid was registered
+2021/11/28 17:20:19 (THE CLIENT WOULD NOT SEE THIS) ------ Error when calling Result: A server crashed!
+2021/11/28 17:20:19 Auction is over - Winner is YOU with the bid of 2000 💰

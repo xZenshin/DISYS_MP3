@@ -21,6 +21,12 @@ var (
 )
 
 func main() {
+	f, err := os.OpenFile("../AuctionHouse Log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	log.SetOutput(f)
+
 	file, err := os.Open("../ports.txt")
 	if err != nil {
 		log.Fatal(err)
@@ -45,8 +51,7 @@ func main() {
 		text, _ := reader.ReadString('\n')
 		text = strings.TrimRight(text, "\r\n")
 		if text == "1" {
-
-			fmt.Println("ENTER YOUR BID(Dogecoins) NOW PLZ:")
+			fmt.Println("ENTER YOUR BID 💰:")
 			bidString, _ := reader.ReadString('\n')
 			bidString = strings.TrimRight(bidString, "\r\n")
 			bid, err := strconv.Atoi(bidString)
@@ -89,12 +94,14 @@ func RegisterClient() {
 		if err != nil {
 			log.Fatalf("Error when registering Client: %s", err)
 		}
-		log.Printf("Response from server: %s\n", response.Acknowledgement)
+		log.Printf("Response from port %s: %s\n", port, response.Acknowledgement)
 		log.Printf("Your ID is: %d\n", id)
 	}
 }
 
 func Bid(amount int32) {
+	var bidResponse string = ""
+
 	for _, port := range ports {
 
 		var conn *grpc.ClientConn
@@ -109,11 +116,12 @@ func Bid(amount int32) {
 		response, err := AH.Bid(context.Background(), &a.Request{Id: int32(id), Amount: amount})
 
 		if err != nil {
-			log.Printf("Error when calling Bid: %s", err)
+			log.Printf("(THE CLIENT WOULD NOT SEE THIS) ------ Error when calling Bid: A server crashed!")
 		} else {
-			log.Printf("Response from server: %s\n", response.Acknowledgement)
+			bidResponse = response.Acknowledgement
 		}
 	}
+	log.Printf("Response from server: %s\n", bidResponse)
 
 }
 
@@ -137,7 +145,7 @@ func Result() {
 		outcome, err := AH.Result(context.Background(), &emptypb.Empty{})
 
 		if err != nil {
-			log.Printf("Error when calling Result: %s", err)
+			log.Printf("(THE CLIENT WOULD NOT SEE THIS) ------ Error when calling Result: A server crashed!")
 		} else {
 
 			if outcome.GetIsOver() {
@@ -154,12 +162,12 @@ func Result() {
 
 	if isAuctionOver {
 		if highestBidderID != int32(id) {
-			log.Printf("Auction is over - Winner is client %d with the bid of %d dogecoins\n", highestBidderID, highestCurrentBid)
+			log.Printf("Auction is over - Winner is client %d with the bid of %d 💰\n", highestBidderID, highestCurrentBid)
 		} else {
-			log.Printf("Auction is over - Winner is YOU with the bid of %d dogecoins\n", highestCurrentBid)
+			log.Printf("Auction is over - Winner is YOU with the bid of %d 💰\n", highestCurrentBid)
 		}
 	} else {
-		log.Printf("The Auction is still going, highest current bid = %d\n", highestCurrentBid)
+		log.Printf("The Auction is still going, highest current bid = %d 💰\n", highestCurrentBid)
 	}
 
 }

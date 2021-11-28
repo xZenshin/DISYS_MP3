@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -89,7 +90,10 @@ func (AH *ReplicaManager) Bid(ctx context.Context, bid *a.Request) (*a.Response,
 		AH.Bidders = append(AH.Bidders, int(bid.Id))
 		AH.highestBid = bid.GetAmount()
 		AH.highestBidderID = bid.GetId()
-		return &a.Response{Acknowledgement: "No auction was running, you have started one"}, nil
+
+		bidAmount := strconv.FormatInt(int64(bid.GetAmount()), 10)
+
+		return &a.Response{Acknowledgement: "No auction was running, you have started one with a bid of " + bidAmount}, nil
 	}
 
 }
@@ -102,7 +106,6 @@ func (AH *ReplicaManager) Result(ctx context.Context, _ *emptypb.Empty) (*a.Outc
 			IsOver:     true,
 			Winner:     AH.highestBidderID,
 		}
-		fmt.Println("Sending back isOver", auctionOver)
 		return &resultRespons, nil
 	} else {
 		resultRespons := a.Outcome{
@@ -111,7 +114,6 @@ func (AH *ReplicaManager) Result(ctx context.Context, _ *emptypb.Empty) (*a.Outc
 			IsOver:     AH.isOver,
 			Winner:     AH.highestBidderID,
 		}
-		fmt.Println("Sending back isOver", auctionOver)
 		return &resultRespons, nil
 	}
 }
@@ -129,14 +131,14 @@ func (AH *ReplicaManager) RegisterClient(ctx context.Context, _ *emptypb.Empty) 
 func StartServer(port string, toRegister ReplicaManager) {
 	list, err := net.Listen("tcp", ":"+port)
 	if err != nil {
-		fmt.Printf("Failed to listen on port %s: %v", port, err)
+		log.Printf("Failed to listen on port %s: %v", port, err)
 	}
 
 	grpcServer := grpc.NewServer()
 	a.RegisterAuctionHouseServer(grpcServer, &toRegister)
 	err = grpcServer.Serve(list)
 	if err != nil {
-		fmt.Printf("Failed to start gRPC server: %v", err)
+		log.Printf("Failed to start gRPC server: %v", err)
 	}
 }
 
@@ -150,12 +152,10 @@ func contains(s []int, e int) bool {
 }
 
 func (AH *ReplicaManager) startAuction(timeInSec time.Duration) {
-	fmt.Println("Auction started! The duration of the auction is", timeInSec)
-
+	log.Println("Auction started! The duration of the auction is ", timeInSec.String())
 	time.Sleep(timeInSec * time.Second)
 	auctionOver = true
 	AH.Bidders = nil
-	//AH.Bidders[:0]
-	fmt.Println("AUCTION IS OVER!")
+	log.Println("AUCTION IS OVER!")
 
 }
