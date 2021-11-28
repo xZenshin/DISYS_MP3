@@ -7,7 +7,6 @@ import (
 	"log"
 	"net"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 
@@ -19,20 +18,28 @@ import (
 type ReplicaManager struct {
 	a.UnimplementedAuctionHouseServer
 
-	ID              int
+	//ID              int
 	port            string
 	highestBid      int32
 	highestBidderID int32
 	Bidders         []int
+	AllClients      []int
 	Clients         int32
 	isOver          bool
 }
 
 var (
 	ReplicaManagers []ReplicaManager
+	Port            string
+	auctionOver     bool
 )
 
 func main() {
+	auctionOver = true
+	fmt.Println("Enter port number (You can only choose between 5000, 5001 and 5002): ")
+	reader := bufio.NewReader(os.Stdin)
+	inputPort, _ := reader.ReadString('\n')
+	inputPort = strings.TrimRight(inputPort, "\r\n")
 
 	file, err := os.Open("../ports.txt")
 	if err != nil {
@@ -43,61 +50,70 @@ func main() {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		RM := ReplicaManager{
-			ID:         len(ReplicaManagers) + 1,
-			port:       scanner.Text(),
-			highestBid: 0,
-			Clients:    1,
+		scannedPort := scanner.Text()
+		if scannedPort == inputPort {
+			Port = scannedPort
+			server := ReplicaManager{
+				port: Port,
+			}
+			go StartServer(Port, server)
+			fmt.Println("Started server with port: " + Port)
+			break
 		}
-		ReplicaManagers = append(ReplicaManagers, RM)
 	}
-	for _, RM := range ReplicaManagers {
-		go StartServer(RM.port, RM)
-	}
-
-	reader := bufio.NewReader(os.Stdin)
 
 	for {
-		//After a timeframe close the auction
-		fmt.Println("ENTER SECONDS OF AUCTION PLS")
-		auctionData, _ := reader.ReadString('\n')
-		auctionData = strings.TrimRight(auctionData, "\r\n")
-		fmt.Println("REGISTERED YOUR SECONDS", auctionData)
-		interval, err := strconv.Atoi(auctionData)
-		if err != nil {
-		}
-		for _, server := range ReplicaManagers {
-			go server.startAuction(time.Duration(interval))
-		}
+		// Infinity loop
 	}
-
 }
 
-//Missing return for exception (potentially not needed)
 func (AH *ReplicaManager) Bid(ctx context.Context, bid *a.Request) (*a.Response, error) {
-	if !contains(AH.Bidders, int(bid.Id)) {
-		AH.Bidders = append(AH.Bidders, int(bid.Id))
-	}
+	//If the auction is running register the bidder then check if bid is higher than highestCurrentBid
+	if !auctionOver {
 
-	if bid.GetAmount() > AH.highestBid {
+		if !contains(AH.Bidders, int(bid.Id)) {
+			AH.Bidders = append(AH.Bidders, int(bid.Id))
+		}
+		if bid.GetAmount() > AH.highestBid {
+			AH.highestBid = bid.GetAmount()
+			AH.highestBidderID = bid.GetId()
+			return &a.Response{Acknowledgement: "Your bid was registered"}, nil
+		} else {
+			return &a.Response{Acknowledgement: "Your bid was lower than the current bid, please check the outcome"}, nil
+		}
+
+		//If no auction is active, start a new one
+	} else {
+		auctionOver = false
+		go AH.startAuction(time.Duration(30))
+		AH.Bidders = append(AH.Bidders, int(bid.Id))
 		AH.highestBid = bid.GetAmount()
 		AH.highestBidderID = bid.GetId()
-		return &a.Response{Acknowledgement: "Your bid was registered"}, nil
-	} else {
-		return &a.Response{Acknowledgement: "Your bid was too low, please check the outcome"}, nil
+		return &a.Response{Acknowledgement: "No auction was running, you have started one"}, nil
 	}
 
 }
 
 func (AH *ReplicaManager) Result(ctx context.Context, _ *emptypb.Empty) (*a.Outcome, error) {
-	fmt.Println("Sending back isOver", AH.isOver)
-	resultRespons := a.Outcome{
-		Id:         AH.highestBidderID,
-		HighestBid: AH.highestBid,
-		IsOver:     AH.isOver,
-		Winner:     AH.highestBidderID,
+	if auctionOver {
+		resultRespons := a.Outcome{
+			Id:         AH.highestBidderID,
+			HighestBid: AH.highestBid,
+			IsOver:     true,
+			Winner:     AH.highestBidderID,
+		}
+		fmt.Println("Sending back isOver", auctionOver)
+		return &resultRespons, nil
+	} else {
+		resultRespons := a.Outcome{
+			Id:         AH.highestBidderID,
+			HighestBid: AH.highestBid,
+			IsOver:     AH.isOver,
+			Winner:     AH.highestBidderID,
+		}
+		fmt.Println("Sending back isOver", auctionOver)
+		return &resultRespons, nil
 	}
-	return &resultRespons, nil
 }
 
 func (AH *ReplicaManager) RegisterClient(ctx context.Context, _ *emptypb.Empty) (*a.Response, error) {
@@ -105,6 +121,7 @@ func (AH *ReplicaManager) RegisterClient(ctx context.Context, _ *emptypb.Empty) 
 		Id:              AH.Clients,
 		Acknowledgement: "Registered",
 	}
+	AH.AllClients = append(AH.AllClients, int(AH.Clients))
 	AH.Clients++
 	return &registerResponse, nil
 }
@@ -133,11 +150,12 @@ func contains(s []int, e int) bool {
 }
 
 func (AH *ReplicaManager) startAuction(timeInSec time.Duration) {
-	fmt.Println("Auction started!")
-	AH.isOver = false
-	time.Sleep(timeInSec * time.Second)
-	AH.isOver = true
+	fmt.Println("Auction started! The duration of the auction is", timeInSec)
 
+	time.Sleep(timeInSec * time.Second)
+	auctionOver = true
+	AH.Bidders = nil
+	//AH.Bidders[:0]
 	fmt.Println("AUCTION IS OVER!")
-	fmt.Println(AH.isOver)
+
 }

@@ -54,7 +54,7 @@ func main() {
 			if err != nil {
 				fmt.Println("Wrong input!")
 			} else if int32(bid) < ownBid {
-				fmt.Println("TOO LOW")
+				fmt.Println("You can't bid lower than your own previous bids! Try again.")
 			} else {
 				ownBid = int32(bid)
 				Bid(int32(bid))
@@ -109,9 +109,10 @@ func Bid(amount int32) {
 		response, err := AH.Bid(context.Background(), &a.Request{Id: int32(id), Amount: amount})
 
 		if err != nil {
-			log.Fatalf("Error when calling Bid: %s", err)
+			log.Printf("Error when calling Bid: %s", err)
+		} else {
+			log.Printf("Response from server: %s\n", response.Acknowledgement)
 		}
-		log.Printf("Response from server: %s\n", response.Acknowledgement)
 	}
 
 }
@@ -135,18 +136,20 @@ func Result() {
 
 		outcome, err := AH.Result(context.Background(), &emptypb.Empty{})
 
-		if outcome.GetIsOver() {
-			isAuctionOver = true
-		}
-
-		if outcome.HighestBid > highestCurrentBid {
-			highestCurrentBid = outcome.GetHighestBid()
-			highestBidderID = outcome.GetId()
-		}
-
 		if err != nil {
-			log.Fatalf("Error when calling Result: %s", err)
+			log.Printf("Error when calling Result: %s", err)
+		} else {
+
+			if outcome.GetIsOver() {
+				isAuctionOver = true
+			}
+
+			if outcome.HighestBid > highestCurrentBid {
+				highestCurrentBid = outcome.GetHighestBid()
+				highestBidderID = outcome.GetId()
+			}
 		}
+
 	}
 
 	if isAuctionOver {
