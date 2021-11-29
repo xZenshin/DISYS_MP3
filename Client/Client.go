@@ -12,20 +12,31 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
+	
+	"github.com/manifoldco/promptui"
 )
 
 var (
 	id     int
 	ports  []string
 	ownBid int32
+	Results []BidOrResult
 )
 
+type BidOrResult struct {
+	Title string
+}
+
+
+
 func main() {
-	f, err := os.OpenFile("../AuctionHouse Log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		f, err := os.OpenFile("../AuctionHouse Log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}
 	log.SetOutput(f)
+	Results = append(Results, BidOrResult{Title: "Bid"})
+	Results = append(Results, BidOrResult{Title: "Result"})
 
 	file, err := os.Open("../ports.txt")
 	if err != nil {
@@ -40,17 +51,32 @@ func main() {
 	}
 
 	RegisterClient()
-
+	templates := promptui.SelectTemplates{
+		Active:   `💰 {{ .Title | green | bold }}`,
+		Selected: `{{ "✔" | green | bold }}`,
+	}
 	fmt.Println("-- Welcome to the AuctionHouse --\n\n")
 	fmt.Println("-- Today you have a chance to get your hands on the brand new thing you want!!! --\n\n")
 	fmt.Printf("Your ID is: %d \n\n", id)
 
 	for {
+
+		prompt := promptui.Select{
+			Label: "Select",
+			Items: Results,
+			Templates: &templates,
+		}
+	
+		_, result, err := prompt.Run()
+	
+		if err != nil {
+			fmt.Printf("Prompt failed %v\n", err)
+			return
+		}
+	
+		fmt.Printf("You selected %q\n", result)
 		reader := bufio.NewReader(os.Stdin)
-		fmt.Println("To bid press 1, To see the result press 2")
-		text, _ := reader.ReadString('\n')
-		text = strings.TrimRight(text, "\r\n")
-		if text == "1" {
+		if result == "{Bid}" {
 			fmt.Println("ENTER YOUR BID 💰:")
 			bidString, _ := reader.ReadString('\n')
 			bidString = strings.TrimRight(bidString, "\r\n")
@@ -65,7 +91,7 @@ func main() {
 				Bid(int32(bid))
 			}
 
-		} else if text == "2" {
+		} else if result == "{Result}" {
 			fmt.Println("RESULT")
 			Result()
 		} else {
@@ -101,7 +127,6 @@ func RegisterClient() {
 
 func Bid(amount int32) {
 	var bidResponse string = ""
-
 	for _, port := range ports {
 
 		var conn *grpc.ClientConn
@@ -114,14 +139,14 @@ func Bid(amount int32) {
 		AH := a.NewAuctionHouseClient(conn)
 
 		response, err := AH.Bid(context.Background(), &a.Request{Id: int32(id), Amount: amount})
-
+		
 		if err != nil {
 			log.Printf("(THE CLIENT WOULD NOT SEE THIS) ------ Error when calling Bid: A server crashed!")
 		} else {
 			bidResponse = response.Acknowledgement
 		}
 	}
-	log.Printf("Response from server: %s\n", bidResponse)
+	log.Printf("Response from server: Client{%d} bid {%d} -- %s\n", id, amount, bidResponse)
 
 }
 

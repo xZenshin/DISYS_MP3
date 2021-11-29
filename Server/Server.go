@@ -36,6 +36,12 @@ var (
 )
 
 func main() {
+	f, err := os.OpenFile("../AuctionHouse Log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	log.SetOutput(f)
+
 	auctionOver = true
 	fmt.Println("Enter port number (You can only choose between 5000, 5001 and 5002): ")
 	reader := bufio.NewReader(os.Stdin)
@@ -157,5 +163,13 @@ func (AH *ReplicaManager) startAuction(timeInSec time.Duration) {
 	auctionOver = true
 	AH.Bidders = nil
 	log.Println("AUCTION IS OVER!")
+	outcome, err := AH.Result(context.Background(), &emptypb.Empty{})
+	if err != nil {
+		log.Printf("(THE CLIENT WOULD NOT SEE THIS) ------ Error when calling Result: A server crashed!")
+	} else {
+		log.Printf("Auction is over - Winner is client %d with the bid of %d 💰\n", outcome.Id, outcome.HighestBid)
+
+	}
+
 
 }
