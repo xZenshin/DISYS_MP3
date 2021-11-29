@@ -1,39 +1,57 @@
-
-2021/11/29 09:38:59 Response from port 5000: Registered
-2021/11/29 09:38:59 Your ID is: 0
-2021/11/29 09:38:59 Response from port 5001: Registered
-2021/11/29 09:38:59 Your ID is: 0
-2021/11/29 09:38:59 Response from port 5002: Registered
-2021/11/29 09:38:59 Your ID is: 0
-2021/11/29 09:39:04 Response from port 5000: Registered
-2021/11/29 09:39:04 Your ID is: 1
-2021/11/29 09:39:04 Response from port 5001: Registered
-2021/11/29 09:39:04 Your ID is: 1
-2021/11/29 09:39:04 Response from port 5002: Registered
-2021/11/29 09:39:04 Your ID is: 1
-2021/11/29 09:39:08 Response from server: Client{0} bid {10} -- No auction was running, you have started one with a bid of 10
-2021/11/29 09:39:08 Auction started! The duration of the auction is  30ns
-2021/11/29 09:39:08 Auction started! The duration of the auction is  30ns
-2021/11/29 09:39:08 Auction started! The duration of the auction is  30ns
-2021/11/29 09:39:13 Response from server: Client{1} bid {20} -- Your bid was registered
-2021/11/29 09:39:17 Response from server: Client{1} bid {30} -- Your bid was registered
-2021/11/29 09:39:24 (THE CLIENT WOULD NOT SEE THIS) ------ Error when calling Bid: A server crashed!
-2021/11/29 09:39:24 Response from server: Client{1} bid {40} -- Your bid was registered
-2021/11/29 09:39:29 (THE CLIENT WOULD NOT SEE THIS) ------ Error when calling Bid: A server crashed!
-2021/11/29 09:39:29 Response from server: Client{0} bid {50} -- Your bid was registered
-2021/11/29 11:22:09 Response from port 5000: Registered
-2021/11/29 11:22:09 Your ID is: 0
-2021/11/29 11:22:09 Response from port 5001: Registered
-2021/11/29 11:22:09 Your ID is: 2
-2021/11/29 11:22:09 Response from port 5002: Registered
-2021/11/29 11:22:09 Your ID is: 2
-2021/11/29 11:22:12 Auction started! The duration of the auction is  30ns
-2021/11/29 11:22:12 Auction started! The duration of the auction is  30ns
-2021/11/29 11:22:12 Response from server: Client{2} bid {2} -- No auction was running, you have started one with a bid of 2
-2021/11/29 11:22:12 Auction started! The duration of the auction is  30ns
-2021/11/29 11:22:42 AUCTION IS OVER!
-2021/11/29 11:22:42 AUCTION IS OVER!
-2021/11/29 11:22:42 Auction is over - Winner is client 2 with the bid of 2 💰
-2021/11/29 11:22:42 Auction is over - Winner is client 2 with the bid of 2 💰
-2021/11/29 11:22:42 AUCTION IS OVER!
-2021/11/29 11:22:42 Auction is over - Winner is client 2 with the bid of 2 💰
+2021/11/29 11:42:33 Response from port 5000: Registered
+2021/11/29 11:42:33 Your ID is: 0
+2021/11/29 11:42:33 Response from port 5001: Registered
+2021/11/29 11:42:33 Your ID is: 0
+2021/11/29 11:42:33 Response from port 5002: Registered
+2021/11/29 11:42:33 Your ID is: 0
+2021/11/29 11:42:35 Response from server: Client{0} bid {10} -- No auction was running, you have started one with a bid of 10
+2021/11/29 11:42:35 Auction started! The duration of the auction is  30ns
+2021/11/29 11:42:35 Auction started! The duration of the auction is  30ns
+2021/11/29 11:42:35 Auction started! The duration of the auction is  30ns
+2021/11/29 11:42:43 Response from port 5000: Registered
+2021/11/29 11:42:43 Your ID is: 1
+2021/11/29 11:42:43 Response from port 5001: Registered
+2021/11/29 11:42:43 Your ID is: 1
+2021/11/29 11:42:43 Response from port 5002: Registered
+2021/11/29 11:42:43 Your ID is: 1
+2021/11/29 11:42:45 Response from server: Client{1} bid {20} -- Your bid was registered
+2021/11/29 11:43:05 AUCTION IS OVER!
+2021/11/29 11:43:05 AUCTION IS OVER!
+2021/11/29 11:43:05 AUCTION IS OVER!
+2021/11/29 11:43:05 Auction is over - Winner is client 1 with the bid of 20 💰
+2021/11/29 11:43:05 Auction is over - Winner is client 1 with the bid of 20 💰
+2021/11/29 11:43:05 Auction is over - Winner is client 1 with the bid of 20 💰
+2021/11/29 11:52:34 Error when registering Client: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing dial tcp :5000: connectex: No connection could be made because the target machine actively refused it."
+2021/11/29 11:52:57 Error when registering Client: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing dial tcp :5000: connectex: No connection could be made because the target machine actively refused it."
+2021/11/29 11:53:53 Error when registering Client: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing dial tcp :5000: connectex: No connection could be made because the target machine actively refused it."
+2021/11/29 11:55:29 Error when registering Client: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing dial tcp :5000: connectex: No connection could be made because the target machine actively refused it."
+2021/11/29 11:56:21 Error when registering Client: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing dial tcp :5000: connectex: No connection could be made because the target machine actively refused it."
+2021/11/29 11:57:01 Error when registering Client: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing dial tcp :5000: connectex: No connection could be made because the target machine actively refused it."
+2021/11/29 11:58:24 Response from port 5000: Registered
+2021/11/29 11:58:24 Your ID is: 0
+2021/11/29 11:58:24 Response from port 5001: Registered
+2021/11/29 11:58:24 Your ID is: 0
+2021/11/29 11:58:24 Response from port 5002: Registered
+2021/11/29 11:58:24 Your ID is: 0
+2021/11/29 11:58:26 Response from server: Client{0} bid {10} -- No auction was running, you have started one with a bid of 10
+2021/11/29 11:58:26 Auction started! The duration of the auction is  30ns
+2021/11/29 11:58:26 Auction started! The duration of the auction is  30ns
+2021/11/29 11:58:26 Auction started! The duration of the auction is  30ns
+2021/11/29 11:58:56 AUCTION IS OVER!
+2021/11/29 11:58:56 AUCTION IS OVER!
+2021/11/29 11:58:56 AUCTION IS OVER!
+2021/11/29 11:58:56 Auction is over - Winner is client 0 with the bid of 10 💰
+2021/11/29 11:58:56 Auction is over - Winner is client 0 with the bid of 10 💰
+2021/11/29 11:58:56 Auction is over - Winner is client 0 with the bid of 10 💰
+2021/11/29 12:04:23 Failed to listen on port {5000}: listen tcp: lookup tcp/{5000}: getaddrinfow: The specified class was not found.
+2021/11/29 12:05:08 Failed to listen on port {5001}: listen tcp: lookup tcp/{5001}: getaddrinfow: The specified class was not found.
+2021/11/29 12:08:39 Response from port 5000: Registered
+2021/11/29 12:08:39 Your ID is: 0
+2021/11/29 12:08:39 Response from port 5001: Registered
+2021/11/29 12:08:39 Your ID is: 0
+2021/11/29 12:08:39 Response from port 5002: Registered
+2021/11/29 12:08:39 Your ID is: 0
+2021/11/29 12:08:44 Response from server: Client{0} bid {10} -- No auction was running, you have started one with a bid of 10
+2021/11/29 12:08:44 Auction started! The duration of the auction is  30ns
+2021/11/29 12:08:44 Auction started! The duration of the auction is  30ns
+2021/11/29 12:08:44 Auction started! The duration of the auction is  30ns

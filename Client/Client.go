@@ -45,7 +45,7 @@ func main() {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-
+	
 	for scanner.Scan() {
 		ports = append(ports, scanner.Text())
 	}
