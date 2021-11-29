@@ -156,6 +156,8 @@ func (AH *ReplicaManager) startAuction(timeInSec time.Duration) {
 	time.Sleep(timeInSec * time.Second)
 	auctionOver = true
 	AH.Bidders = nil
+	AH.highestBid = 0
+	AH.highestBidderID = -1
 	log.Println("AUCTION IS OVER!")
 
 }

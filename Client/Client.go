@@ -15,17 +15,11 @@ import (
 )
 
 var (
-	id     int
-	ports  []string
-	ownBid int32
+	id    int
+	ports []string
 )
 
 func main() {
-	f, err := os.OpenFile("../AuctionHouse Log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("error opening file: %v", err)
-	}
-	log.SetOutput(f)
 
 	file, err := os.Open("../ports.txt")
 	if err != nil {
@@ -58,10 +52,7 @@ func main() {
 
 			if err != nil {
 				fmt.Println("Wrong input!")
-			} else if int32(bid) < ownBid {
-				fmt.Println("You can't bid lower than your own previous bids! Try again.")
 			} else {
-				ownBid = int32(bid)
 				Bid(int32(bid))
 			}
 
