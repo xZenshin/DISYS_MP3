@@ -2,15 +2,14 @@ package main
 
 import (
 	a "Auction/proto"
-	"bufio"
 	"fmt"
 	"log"
 	"net"
 	"os"
 	"strconv"
-	"strings"
 	"time"
-
+	"github.com/manifoldco/promptui"
+	"strings"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -31,13 +30,58 @@ type ReplicaManager struct {
 
 var (
 	ReplicaManagers []ReplicaManager
-	Port            string
+	//Port            string
 	auctionOver     bool
+	Ports           []Port
 )
 
+type Port struct {
+	PortNumber string
+}
+
 func main() {
+	f, err := os.OpenFile("../AuctionHouse Log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	log.SetOutput(f)
+	//Adds port number to be displayed in the UI
+	Ports = append(Ports, Port{PortNumber: "5000"})
+	Ports = append(Ports, Port{PortNumber: "5001"})
+	Ports = append(Ports, Port{PortNumber: "5002"})
+	//To add more, simply reuse the above and add a new port number
+
+	//Customizing the UI
+	templates := promptui.SelectTemplates{
+		Active:   `📶 {{ .PortNumber | green | bold }}`,
+		Selected: `{{ "✔" | green | bold }}`,
+	}
+
+	//The UI Prompt itself where "Items" is which "set/list" to display
+	prompt := promptui.Select{
+		Label: "Port Number",
+		Items: Ports,
+		Templates: &templates,
+	}
+
+	//Runs the UI which returns the selected Item
+	_, result, err := prompt.Run()
+	
+	if err != nil {
+		fmt.Printf("Prompt failed %v\n", err)
+		return
+	}
+	//Since the returned item is from a list it is returned as {Item} and we need to remove {}
+	result = strings.Replace(result, "{", "", -1)
+	result = strings.Replace(result, "}", "", -1)
 	auctionOver = true
-	fmt.Println("Enter port number (You can only choose between 5000, 5001 and 5002): ")
+	server := ReplicaManager{
+		port: result,
+	}
+	go StartServer(result, server)
+	fmt.Println("Started server with port: " + result)
+
+	/*fmt.Println("Enter port number (You can only choose between 5000, 5001 and 5002): ")
 	reader := bufio.NewReader(os.Stdin)
 	inputPort, _ := reader.ReadString('\n')
 	inputPort = strings.TrimRight(inputPort, "\r\n")
@@ -47,6 +91,7 @@ func main() {
 		log.Fatal(err)
 	}
 	defer file.Close()
+	
 
 	scanner := bufio.NewScanner(file)
 
@@ -62,6 +107,7 @@ func main() {
 			break
 		}
 	}
+	*/
 
 	for {
 		// Infinity loop
@@ -159,5 +205,13 @@ func (AH *ReplicaManager) startAuction(timeInSec time.Duration) {
 	AH.highestBid = 0
 	AH.highestBidderID = -1
 	log.Println("AUCTION IS OVER!")
+	outcome, err := AH.Result(context.Background(), &emptypb.Empty{})
+	if err != nil {
+		log.Printf("(THE CLIENT WOULD NOT SEE THIS) ------ Error when calling Result: A server crashed!")
+	} else {
+		log.Printf("Auction is over - Winner is client %d with the bid of %d 💰\n", outcome.Id, outcome.HighestBid)
+
+	}
+
 
 }
