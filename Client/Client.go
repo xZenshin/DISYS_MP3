@@ -171,10 +171,15 @@ func Result() {
 		AH := a.NewAuctionHouseClient(conn)
 
 		outcome, err := AH.Result(context.Background(), &emptypb.Empty{})
-
+		
+		
 		if err != nil {
 			log.Printf("(THE CLIENT WOULD NOT SEE THIS) ------ Error when calling Result: A server crashed!")
-		} else {
+		} else if outcome.GetId() == -2{ //This is a check to see whether or not there was an auction started at all. 
+			highestBidderID = -2
+			isAuctionOver = true
+			break
+			}else{
 
 			if outcome.GetIsOver() {
 				isAuctionOver = true
@@ -184,16 +189,22 @@ func Result() {
 				highestCurrentBid = outcome.GetHighestBid()
 				highestBidderID = outcome.GetId()
 			}
+			
 		}
+		
 
 	}
 
 	if isAuctionOver {
+		if highestBidderID == -2{
+			log.Printf("There is yet to be an auction at the AuctionHouse! Bid to start one :)!")
+		}else{	
 		if highestBidderID != int32(id) {
 			log.Printf("Auction is over - Winner is client %d with the bid of %d 💰\n", highestBidderID, highestCurrentBid)
 		} else {
 			log.Printf("Auction is over - Winner is YOU with the bid of %d 💰\n", highestCurrentBid)
 		}
+	}
 	} else {
 		log.Printf("The Auction is still going, highest current bid = %d 💰\n", highestCurrentBid)
 	}
