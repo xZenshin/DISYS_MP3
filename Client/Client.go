@@ -24,7 +24,7 @@ var (
 	Results []BidOrResult
 
 )
-
+//Simply a struct to organize it in the PromptUI
 type BidOrResult struct {
 	Title string
 }
@@ -55,6 +55,8 @@ func main() {
 	}
 
 	RegisterClient()
+
+	//UI customization
 	templates := promptui.SelectTemplates{
 		Active:   `💰 {{ .Title | green | bold }}`,
 		Selected: `{{ "✔" | green | bold }}`,
@@ -64,7 +66,7 @@ func main() {
 	fmt.Printf("Your ID is: %d \n\n", id)
 
 	for {
-
+		//The actual UI being displayed
 		prompt := promptui.Select{
 			Label: "Select",
 			Items: Results,
