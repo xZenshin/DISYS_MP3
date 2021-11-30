@@ -1,4 +1,4 @@
-# DISYS_MP3
+# Auction House
 
 ## Running the program
 To run the program navigate to the ```server``` folder and type ```go run .``` in three different terminals. You will the be prompted to choose which port the server should listen to. Here you have to choose a different port for each server.
