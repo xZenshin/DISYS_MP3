@@ -55,3 +55,30 @@
 2021/11/29 12:08:44 Auction started! The duration of the auction is  30ns
 2021/11/29 12:08:44 Auction started! The duration of the auction is  30ns
 2021/11/29 12:08:44 Auction started! The duration of the auction is  30ns
+2021/11/30 11:18:57 Response from port 5000: Registered
+2021/11/30 11:18:57 Your ID is: 0
+2021/11/30 11:18:57 Response from port 5001: Registered
+2021/11/30 11:18:57 Your ID is: 0
+2021/11/30 11:18:57 Response from port 5002: Registered
+2021/11/30 11:18:57 Your ID is: 0
+2021/11/30 11:19:12 Auction started! The duration of the auction is  30ns
+2021/11/30 11:19:12 Response from server: Client{0} bid {50} -- No auction was running, you have started one with a bid of 50
+2021/11/30 11:19:12 Auction started! The duration of the auction is  30ns
+2021/11/30 11:19:12 Auction started! The duration of the auction is  30ns
+2021/11/30 11:19:18 The Auction is still going, highest current bid = 50 💰
+2021/11/30 11:19:38 Response from server: Client{0} bid {10} -- Your bid was lower than the current bid, please check the outcome
+2021/11/30 11:19:42 Auction is over - Winner is client 0 with the bid of 50 💰
+2021/11/30 11:19:42 AUCTION IS OVER!
+2021/11/30 11:19:42 Auction is over - Winner is client 0 with the bid of 50 💰
+2021/11/30 11:19:42 AUCTION IS OVER!
+2021/11/30 11:19:42 Auction is over - Winner is client 0 with the bid of 50 💰
+2021/11/30 11:19:42 AUCTION IS OVER!
+2021/11/30 11:23:39 Auction started! The duration of the auction is  30ns
+2021/11/30 11:23:39 Auction started! The duration of the auction is  30ns
+2021/11/30 11:23:39 Auction started! The duration of the auction is  30ns
+2021/11/30 11:24:09 Auction is over - Winner is client 1 with the bid of 10000 💰
+2021/11/30 11:24:09 AUCTION IS OVER!
+2021/11/30 11:24:09 Auction is over - Winner is client 1 with the bid of 10000 💰
+2021/11/30 11:24:09 AUCTION IS OVER!
+2021/11/30 11:24:09 Auction is over - Winner is client 1 with the bid of 10000 💰
+2021/11/30 11:24:09 AUCTION IS OVER!

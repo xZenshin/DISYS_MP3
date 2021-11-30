@@ -12,35 +12,35 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
-	
+
 	"github.com/manifoldco/promptui"
 )
 
 var (
-
-	id     int
-	ports  []string
-	ownBid int32
+	id      int
+	ports   []string
+	ownBid  int32
 	Results []BidOrResult
-
 )
+
 //Simply a struct to organize it in the PromptUI
 type BidOrResult struct {
 	Title string
 }
 
-
-
 func main() {
 
-		f, err := os.OpenFile("../AuctionHouse Log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("error opening file: %v", err)
-	}
-	log.SetOutput(f)
+	// Uncomment for printing to the Log
+	/*
+			f, err := os.OpenFile("../AuctionHouse Log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+			if err != nil {
+				log.Fatalf("error opening file: %v", err)
+			}
+		log.SetOutput(f)
+	*/
+
 	Results = append(Results, BidOrResult{Title: "Bid"})
 	Results = append(Results, BidOrResult{Title: "Result"})
-
 
 	file, err := os.Open("../ports.txt")
 	if err != nil {
@@ -49,7 +49,7 @@ func main() {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	
+
 	for scanner.Scan() {
 		ports = append(ports, scanner.Text())
 	}
@@ -68,18 +68,18 @@ func main() {
 	for {
 		//The actual UI being displayed
 		prompt := promptui.Select{
-			Label: "Select",
-			Items: Results,
+			Label:     "Select",
+			Items:     Results,
 			Templates: &templates,
 		}
-	
+
 		_, result, err := prompt.Run()
-	
+
 		if err != nil {
 			fmt.Printf("Prompt failed %v\n", err)
 			return
 		}
-	
+
 		fmt.Printf("You selected %q\n", result)
 		reader := bufio.NewReader(os.Stdin)
 		if result == "{Bid}" {
@@ -142,7 +142,7 @@ func Bid(amount int32) {
 		AH := a.NewAuctionHouseClient(conn)
 
 		response, err := AH.Bid(context.Background(), &a.Request{Id: int32(id), Amount: amount})
-		
+
 		if err != nil {
 			log.Printf("(THE CLIENT WOULD NOT SEE THIS) ------ Error when calling Bid: A server crashed!")
 		} else {
