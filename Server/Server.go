@@ -17,8 +17,6 @@ import (
 
 type ReplicaManager struct {
 	a.UnimplementedAuctionHouseServer
-
-	//ID              int
 	port            string
 	highestBid      int32
 	highestBidderID int32
@@ -30,7 +28,6 @@ type ReplicaManager struct {
 
 var (
 	ReplicaManagers []ReplicaManager
-	//Port            string
 	auctionOver     bool
 	Ports           []Port
 )
@@ -49,7 +46,7 @@ func main() {
 	Ports = append(Ports, Port{PortNumber: "5000"})
 	Ports = append(Ports, Port{PortNumber: "5001"})
 	Ports = append(Ports, Port{PortNumber: "5002"})
-	//To add more, simply reuse the above and add a new port number
+	//To add more available ports, simply reuse the above and add a new port number
 
 	//Customizing the UI
 	templates := promptui.SelectTemplates{
@@ -71,7 +68,7 @@ func main() {
 		fmt.Printf("Prompt failed %v\n", err)
 		return
 	}
-	//Since the returned item is from a list it is returned as {Item} and we need to remove {}
+	//Since the returned item is from a list it is returned as {Item} and we need to remove the brackets {} to make it very beautiful
 	result = strings.Replace(result, "{", "", -1)
 	result = strings.Replace(result, "}", "", -1)
 	auctionOver = true
@@ -81,33 +78,6 @@ func main() {
 	go StartServer(result, server)
 	fmt.Println("Started server with port: " + result)
 
-	/*fmt.Println("Enter port number (You can only choose between 5000, 5001 and 5002): ")
-	reader := bufio.NewReader(os.Stdin)
-	inputPort, _ := reader.ReadString('\n')
-	inputPort = strings.TrimRight(inputPort, "\r\n")
-
-	file, err := os.Open("../ports.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-	
-
-	scanner := bufio.NewScanner(file)
-
-	for scanner.Scan() {
-		scannedPort := scanner.Text()
-		if scannedPort == inputPort {
-			Port = scannedPort
-			server := ReplicaManager{
-				port: Port,
-			}
-			go StartServer(Port, server)
-			fmt.Println("Started server with port: " + Port)
-			break
-		}
-	}
-	*/
 
 	for {
 		// Infinity loop
@@ -200,11 +170,6 @@ func contains(s []int, e int) bool {
 func (AH *ReplicaManager) startAuction(timeInSec time.Duration) {
 	log.Println("Auction started! The duration of the auction is ", timeInSec.String())
 	time.Sleep(timeInSec * time.Second)
-	auctionOver = true
-	AH.Bidders = nil
-	AH.highestBid = 0
-	AH.highestBidderID = -1
-	log.Println("AUCTION IS OVER!")
 	outcome, err := AH.Result(context.Background(), &emptypb.Empty{})
 	if err != nil {
 		log.Printf("(THE CLIENT WOULD NOT SEE THIS) ------ Error when calling Result: A server crashed!")
@@ -212,6 +177,12 @@ func (AH *ReplicaManager) startAuction(timeInSec time.Duration) {
 		log.Printf("Auction is over - Winner is client %d with the bid of %d 💰\n", outcome.Id, outcome.HighestBid)
 
 	}
+	auctionOver = true
+	AH.Bidders = nil
+	AH.highestBid = 0
+	AH.highestBidderID = -1
+	log.Println("AUCTION IS OVER!")
+	
 
 
 }
