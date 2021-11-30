@@ -74,6 +74,7 @@ func main() {
 	auctionOver = true
 	server := ReplicaManager{
 		port: result,
+		highestBidderID: -2,
 	}
 	go StartServer(result, server)
 	fmt.Println("Started server with port: " + result)
@@ -116,13 +117,21 @@ func (AH *ReplicaManager) Bid(ctx context.Context, bid *a.Request) (*a.Response,
 
 func (AH *ReplicaManager) Result(ctx context.Context, _ *emptypb.Empty) (*a.Outcome, error) {
 	if auctionOver {
+		if AH.highestBidderID == -2{
+			resultRespons := a.Outcome{
+				Id: -2,
+			}
+			return &resultRespons, nil
+		}else{
 		resultRespons := a.Outcome{
 			Id:         AH.highestBidderID,
 			HighestBid: AH.highestBid,
 			IsOver:     true,
 			Winner:     AH.highestBidderID,
 		}
+	
 		return &resultRespons, nil
+	}
 	} else {
 		resultRespons := a.Outcome{
 			Id:         AH.highestBidderID,
@@ -182,7 +191,4 @@ func (AH *ReplicaManager) startAuction(timeInSec time.Duration) {
 	AH.highestBid = 0
 	AH.highestBidderID = -1
 	log.Println("AUCTION IS OVER!")
-	
-
-
 }
